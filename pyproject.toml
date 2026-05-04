@@ -1,7 +1,7 @@
 [project]
 name = "radio-fits-combiner"
 version = "0.1.0"
-description = "Add your description here"
+description = "Program to reconvolve and/or stitch radio images together."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
