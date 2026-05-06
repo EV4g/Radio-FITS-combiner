@@ -13,7 +13,7 @@ from reproject.mosaicking import find_optimal_celestial_wcs, reproject_and_coadd
 # Inputs / outputs
 INPUT_PATTERN = "*.fits"
 OUTPUT_FITS   = "reconvolved.fits"
-SCRATCH_DIR   = "."
+SCRATCH_DIR   = "/tmp"
 
 # Per-pixel Gaussian primary-beam weight (degrees FWHM).
 # LOFAR HBA core: ~3-4 deg.  LBA is larger.
