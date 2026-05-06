@@ -77,8 +77,8 @@ def squeeze_to_2d(data, wcs):
 
 def beam_center_from_header(header, wcs, shape):
     """Pointing center from the header. Falls back to image center."""
-    for ra_key, dec_key in [("CRVAL1", "CRVAL2"),
-                            ("OBSRA",  "OBSDEC"),
+    for ra_key, dec_key in [("OBSRA",  "OBSDEC"),
+                            ("CRVAL1", "CRVAL2"),
                             ("RA",     "DEC")]:
         if ra_key in header and dec_key in header:
             try:

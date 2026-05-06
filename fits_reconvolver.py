@@ -40,9 +40,21 @@ def reconvolve(input_fits, output_fits):
     
     pixscale = abs(header['CDELT1']) * 3600 * u.arcsec
     print(f"  Pixel scale         : {pixscale:.4f}")
-    
-    kernel_beam = TARGET_BEAM.deconvolve(CURRENT_BEAM)
-    print(f"  Current beam        : {CURRENT_BEAM}")
+
+    # Use beam from header when available; fall back to hardcoded CURRENT_BEAM
+    if all(k in header for k in ('BMAJ', 'BMIN', 'BPA')):
+        current_beam = Beam(
+            major=header['BMAJ'] * u.deg,
+            minor=header['BMIN'] * u.deg,
+            pa=header['BPA']    * u.deg,
+        )
+        print("  Current beam        : read from header")
+    else:
+        current_beam = CURRENT_BEAM
+        print("  Current beam        : WARNING — not in header, using hardcoded value")
+
+    kernel_beam = TARGET_BEAM.deconvolve(current_beam)
+    print(f"  Current beam        : {current_beam}")
     print(f"  Target beam         : {TARGET_BEAM}")
     print(f"  Convolution kernel  : {kernel_beam}")
     
@@ -50,9 +62,9 @@ def reconvolve(input_fits, output_fits):
     print(f"  Kernel array size   : {kernel.shape}")
 
     # Rescale flux
-    old_area = beam_area_pix2(CURRENT_BEAM, pixscale)
+    old_area = beam_area_pix2(current_beam, pixscale)
     new_area = beam_area_pix2(TARGET_BEAM,  pixscale)
-    print(f"\n  Old beam area : {old_area:.2f} pix²  ({CURRENT_BEAM.major.to(u.arcsec):.1f} circ.)")
+    print(f"\n  Old beam area : {old_area:.2f} pix²")
     print(f"  New beam area : {new_area:.2f} pix²")
     
     data_jy_pix = data2d / old_area
